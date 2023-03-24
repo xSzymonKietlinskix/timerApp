@@ -45,6 +45,7 @@ export default function TimerScreen() {
 
   var test = minutes.toString() + ":" + seconds.toString();
   const [startValue, setStartValue] = useState(0);
+  const [startValueMin, setStartValueMin] = useState(0);
 
   return (
     <Center
@@ -57,25 +58,42 @@ export default function TimerScreen() {
         <Box
           alignItems="center"
           rounded="md"
-          p={10}
-          bg={useColorModeValue("blue.400", "yellow.500")}
+          p={5}
+          bg={useColorModeValue("#6495ed", "#daa520")}
         >
-          <HStack space={5} alignItems="center" p={5}>
+          <HStack space={2} alignItems="center" p={5}>
             <Button
               _dark={{ bg: "blueGray.900" }}
-              _light={{ bg: "blueGray.900" }}
-              size="sm"
               onPress={() => setMinutes(minutes - 1)}
             >
               -
             </Button>
-            <Text fontSize={"md"}>
-              {minutes}:{seconds}
-            </Text>
             <Button
               _dark={{ bg: "blueGray.900" }}
-              _light={{ bg: "blueGray.900" }}
-              size="sm"
+              onPress={() => setMinutes(minutes - 5)}
+              size={"md"}
+            >
+              -
+            </Button>
+            <CircularProgress
+              ref={progressRef}
+              startInPausedState={false}
+              value={0}
+              maxValue={startValueMin}
+              initialValue={minutes}
+              radius={60}
+              progressValueColor={"#fff"}
+              duration={startValueMin * 60 * 1000}
+            />
+            <Button
+              _dark={{ bg: "blueGray.900" }}
+              onPress={() => setMinutes(minutes + 5)}
+              size={"md"}
+            >
+              +
+            </Button>
+            <Button
+              _dark={{ bg: "blueGray.900" }}
               onPress={() => setMinutes(minutes + 1)}
             >
               +
@@ -85,22 +103,18 @@ export default function TimerScreen() {
             ref={progressRef}
             startInPausedState={true}
             value={0}
-            radius={120}
-            maxValue={1000}
-            initialValue={startValue}
+            maxValue={59}
+            initialValue={59}
+            radius={40}
             progressValueColor={"#fff"}
-            activeStrokeWidth={15}
-            inActiveStrokeWidth={15}
-            duration={startValue * 1000}
-            onAnimationComplete={() => alert("time out")}
+            duration={1000 * 59}
           />
           <HStack space={5} justifyContent="center" p={5}>
             <Button
               _dark={{ bg: "blueGray.900" }}
-              _light={{ bg: "blueGray.900" }}
-              size="sm"
               onPress={() => {
                 setStartValue(minutes * 60 + seconds);
+                setStartValueMin(minutes);
                 progressRef.current.reAnimate();
                 setStartTimer(true);
               }}
@@ -108,11 +122,7 @@ export default function TimerScreen() {
               Start
             </Button>
             <Button
-              colorScheme="dark"
-              p={2}
               _dark={{ bg: "blueGray.900" }}
-              _light={{ bg: "blueGray.900" }}
-              size="sm"
               onPress={() => {
                 setSeconds(0), setMinutes(0);
                 progressRef.current.pause();
@@ -123,8 +133,6 @@ export default function TimerScreen() {
             </Button>
             <Button
               _dark={{ bg: "blueGray.900" }}
-              _light={{ bg: "blueGray.900" }}
-              size="sm"
               onPress={() => {
                 clearInterval(timer);
                 progressRef.current.pause();

@@ -11,4 +11,15 @@ const colors = {
   },
 };
 
-export default extendTheme({ config, colors });
+const components = {
+  Button: {
+    // Can simply pass default props to change default behaviour of components.
+    defaultProps: {
+      bg: "blueGray.900",
+      rounded: "md",
+      size: "sm",
+    },
+  },
+};
+
+export default extendTheme({ config, colors, components });
